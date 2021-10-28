@@ -65,7 +65,8 @@ class HIDDriver:
         for k in range(10):
             self.h.write(bytes([0x15, 0x01])) # Transfer Status Request
             response = self.h.read(7)
-            print (response)
+            if (response[0] == 0x16 and response[1] != 0):
+                print (response)
             if (response[0] == 0x16) and (response[2] == 5):  # Polling a data
                 self.h.write(bytes([0x12, 0x00, 0x01])) # Data Read Force
                 response = self.h.read(4)
@@ -153,8 +154,9 @@ if __name__ == '__main__':
     d = HIDDriver()
 
     try:
-        d.read_byte(0x09)
-        d.read_byte(0x08)
+        for addr in range(1,127):
+            print (hex(addr))
+            d.read_byte(addr)
     except :
         pass
 
